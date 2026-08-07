@@ -1,0 +1,85 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = site.description } = Astro.props;
+const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.role}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  jobTitle: 'Manager, Analytics & AI Engineering',
+  email: `mailto:${site.email}`,
+  url: site.url,
+  address: { '@type': 'PostalAddress', addressLocality: 'Metro-Atlanta', addressRegion: 'GA', addressCountry: 'US' },
+  sameAs: [site.linkedin, site.github],
+  knowsAbout: ['Snowflake', 'dbt', 'Databricks', 'Power BI', 'Azure', 'Data Engineering', 'AI Engineering'],
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'Cornell University' },
+    { '@type': 'CollegeOrUniversity', name: 'Rowan University' },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="author" content={site.name} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} is:inline />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="shell">
+        <a class="brand" href="/">Kyle Stuart</a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="/#work">Work</a>
+          <a href="/#stack">Stack</a>
+          <a href="/#experience" class="nav-optional">Experience</a>
+          <a href={site.resume}>Résumé</a>
+          <a href={site.github} rel="me noopener">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell">
+        <span>&copy; {new Date().getFullYear()} {site.name} · {site.location}</span>
+        <div class="footer-links">
+          <a href={`mailto:${site.email}`}>Email</a>
+          <a href={site.linkedin} rel="me noopener">LinkedIn</a>
+          <a href={site.github} rel="me noopener">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

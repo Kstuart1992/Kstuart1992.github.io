@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kstuart1992.github.io/sitemap-index.xml

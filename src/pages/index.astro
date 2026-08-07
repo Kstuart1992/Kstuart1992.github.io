@@ -1,0 +1,203 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { site, stack, experience, education, domains } from '../data/site';
+
+const projects = (await getCollection('projects', ({ data }) => data.published)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const pillars = [
+  {
+    eyebrow: 'Platform',
+    title: 'Warehouse & lakehouse architecture',
+    body: 'Design the layers, contracts, and governance that make a warehouse trustworthy — Snowflake and Databricks on the storage side, dbt for transformation, tested and versioned like software.',
+  },
+  {
+    eyebrow: 'Analytics engineering',
+    title: 'Self-service that actually holds up',
+    body: 'Modeled marts and semantic layers business teams can query without a ticket, backed by tests, lineage, and documentation instead of tribal knowledge.',
+  },
+  {
+    eyebrow: 'AI engineering',
+    title: 'Multi-agent systems in production',
+    body: 'Agent architectures grounded in governed data — retrieval over the warehouse, tool use against real systems, and the evaluation harness to know when they are wrong.',
+  },
+];
+---
+
+<Base>
+  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="shell">
+      <h1 class="hero-name">Kyle Stuart</h1>
+      <p class="hero-role">Manager — Analytics &amp; AI Engineering</p>
+
+      <p class="hero-lede">
+        I build data platforms and the teams that run them — warehouse architecture on Snowflake and
+        Databricks, transformation with dbt, and multi-agent AI systems grounded in governed data.
+      </p>
+
+      <p class="hero-sub">
+        Currently at Holman Enterprises, where I built two teams from the ground up: Analytics
+        Engineering (13 engineers) and AI Engineering (3). A decade and a half across the Army,
+        insurance, consulting, and enterprise fleet — hands-on the whole way.
+      </p>
+
+      <div class="hero-meta">
+        <span>📍 {site.location}</span>
+        <span>🎓 MPS, Data Science &amp; Applied Statistics — Cornell</span>
+        <span>🎖 US Army veteran</span>
+      </div>
+
+      <div class="actions">
+        <a class="btn btn-primary" href="#work">See the work</a>
+        <a class="btn" href={site.resume}>Résumé (PDF)</a>
+        <a class="btn" href={site.linkedin} rel="me noopener">LinkedIn</a>
+        <a class="btn" href={site.github} rel="me noopener">GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── What I do ────────────────────────────────────────────────────── -->
+  <section class="section" id="about">
+    <div class="shell">
+      <h2 class="section-label">What I do</h2>
+      <div class="grid grid-3">
+        {
+          pillars.map((p) => (
+            <article class="card">
+              <p class="card-eyebrow">{p.eyebrow}</p>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Selected work ────────────────────────────────────────────────── -->
+  <section class="section" id="work">
+    <div class="shell">
+      <h2 class="section-label">Selected work</h2>
+      <div class="grid grid-2">
+        {
+          projects.map((project) => (
+            <a class="card card-link" href={`/projects/${project.id}/`}>
+              <p class="card-eyebrow">{project.data.context}</p>
+              <h3>{project.data.title}</h3>
+              <p>{project.data.summary}</p>
+              {project.data.tags.length > 0 && (
+                <ul class="tags">
+                  {project.data.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              )}
+              <p class="card-cta">Read the write-up &rarr;</p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stack ────────────────────────────────────────────────────────── -->
+  <section class="section" id="stack">
+    <div class="shell">
+      <h2 class="section-label">Stack</h2>
+      {
+        stack.map((group) => (
+          <div class="stack-group">
+            <h3>{group.title}</h3>
+            <ul class="stack-items">
+              {group.items.map((item) => (
+                <li>
+                  {item.name}
+                  {item.yrs && <span class="yrs"> · {item.yrs}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ── Experience ───────────────────────────────────────────────────── -->
+  <section class="section" id="experience">
+    <div class="shell">
+      <h2 class="section-label">Experience</h2>
+      {
+        experience.map((role) => (
+          <article class="role">
+            <p class="role-when">{role.when}</p>
+            <div>
+              <h3>{role.title}</h3>
+              <p class="role-org">
+                {role.org}
+                {role.where && ` · ${role.where}`}
+              </p>
+              <ul>
+                {role.bullets.map((bullet) => (
+                  <li>{bullet}</li>
+                ))}
+              </ul>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ── Education, domains, contact ──────────────────────────────────── -->
+  <section class="section" id="contact">
+    <div class="shell split">
+      <div>
+        <h2 class="section-label">Education</h2>
+        {
+          education.map((item) => (
+            <div class="edu-item">
+              <h3>{item.degree}</h3>
+              <p>
+                {item.field} · {item.school}, {item.year}
+              </p>
+            </div>
+          ))
+        }
+
+        <h2 class="section-label" style="margin-top:2.5rem">Domains</h2>
+        <ul class="stack-items">
+          {domains.map((domain) => <li>{domain}</li>)}
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="section-label">Get in touch</h2>
+        <p style="color:var(--muted); margin-bottom:1.5rem; max-width:44ch">
+          Open to conversations about analytics and AI engineering leadership roles, and to
+          consulting work in data platform architecture.
+        </p>
+        <ul class="contact-list">
+          <li>
+            <span class="label">Email</span>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+          <li>
+            <span class="label">LinkedIn</span>
+            <a href={site.linkedin} rel="me noopener">in/kyle-stuart-va117</a>
+          </li>
+          <li>
+            <span class="label">GitHub</span>
+            <a href={site.github} rel="me noopener">github.com/Kstuart1992</a>
+          </li>
+          <li>
+            <span class="label">Résumé</span>
+            <a href={site.resume}>Download PDF</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
